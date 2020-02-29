@@ -14,6 +14,10 @@ baud = PCAN_BAUD_500K
 heartbeat_timeout = 15  # seconds
 tic_sleep_period = .001
 
+# log log file
+log_log_file = open("logs.txt", "a")
+
+# init pcan
 pcan = PCANBasic()
 
 status = pcan.Initialize(channel, baud)
@@ -30,11 +34,17 @@ pcan.SetValue(channel, PCAN_TRACE_SIZE, 100)
 
 logging_active = False
 def start_logging():
+    log_log_file.write("\nStarted Logging: " + str(datetime.datetime.now()) + ", ")
+    log_log_file.flush()
+
     pcan.SetValue(channel, PCAN_TRACE_STATUS, PCAN_PARAMETER_ON)
     global logging_active
     logging_active = True
 
 def stop_logging():
+    log_log_file.write("Stopped Logging: " + str(datetime.datetime.now()))
+    log_log_file.flush()
+
     pcan.SetValue(channel, PCAN_TRACE_STATUS, PCAN_PARAMETER_OFF)
     global logging_active
     logging_active = False
